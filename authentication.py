@@ -29,7 +29,7 @@ while True:
     #Write to file function
     def toFile(var):
         with path.open("a") as f:
-            f.write(var + "\n")
+            f.write("\n" + var)
             f.close()
 
     #Check if user is correct
@@ -155,7 +155,6 @@ while True:
             print('Now answer your MFA question.')
             print(questionList[int(twoLines(userInpt))])
             guessSecAns = input()
-            print (threeLines(userInpt))
             if guessSecAns.strip().lower() == threeLines(userInpt).strip().lower():
                 print('You got it right!')
             else:

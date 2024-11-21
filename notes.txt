@@ -1,0 +1,3 @@
+add array for login info
+
+check for nothing or unexpected value
