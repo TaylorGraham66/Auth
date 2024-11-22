@@ -14,6 +14,8 @@ questionList = ['Who is your favorite super hero?', 'What is your moms maiden na
 question = ''
 secAns = ''
 guessSecAns = ''
+userList = []
+
 
 #Authentication Loop
 while True:
@@ -128,6 +130,7 @@ while True:
             #Quit if needed
             if userInpt.lower() == 'quit':
                 break
+            #Make sure username is in the system
             while not checkUser(userInpt):
                 print("That username is not in our system, try again")
                 userInpt = input()

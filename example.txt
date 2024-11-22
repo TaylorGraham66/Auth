@@ -1,1 +1,6 @@
+Pierre:encrypted_password:0:the flash
 Taylor:encrypted_password:0:the flash
+Graham:encrypted_password:0:the flash
+Pookie:encrypted_password:0:the flash
+George:encrypted_password:0:the flash
+Phillip:encrypted_password:0:the flash

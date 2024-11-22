@@ -1,6 +1,4 @@
-add array for login info. Making changes in test.py: Have made some progress, but still need to find a way to 
-check the file to see if the printed array is in their and get each specific value. Can print the array to see how
-it looks to see if that helps figure out a way to do it. Might number each line for a key or just have the username 
-(value[0]) be the key that is used to read off the rest of the line.
+add array for login info. Might number each line for a key or just have the username (value[0]) be the 
+key that is used to read off the rest of the line.
 
 check for nothing or unexpected value: not started

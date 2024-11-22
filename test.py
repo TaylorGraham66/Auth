@@ -3,9 +3,6 @@ userList = []
 def addParam(param):
     userList.append(param)
 
-def checkList(check):
-    if checkUser(userInpt):
-        userList = 
 
 while True:
     print("Set your username")
