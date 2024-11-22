@@ -15,6 +15,10 @@ question = ''
 secAns = ''
 guessSecAns = ''
 userList = []
+line_list = []
+guess = ''
+inList = ''
+tries = 3
 
 
 #Authentication Loop
@@ -29,8 +33,8 @@ while True:
     #Write to file function
     def toFile(var):
         with path.open("a") as f:
-            f.write("\n" + var)
-            f.close()
+            f.write(":".join(str(item) for item in var))
+            f.write("\n")
 
     #Check if user is correct
     def checkUser(inptUser):
@@ -40,36 +44,32 @@ while True:
                     return True
             return False
 
-    #Read out the next line in the file
-    def nextLine(target_string):
-        with path.open("r") as f:
-            for line in f:
-                if target_string in line:
-                    return next(f, None).strip()
-        return None
+    def getList(target_string):
+        while True:
+            if checkUser(target_string) == True:
+                with path.open('r') as f:
+                    for line in f:
+                        if target_string in line:
+                            lineCheck = line.strip()
+                            line_list = lineCheck.split(':')
+                            break
+                break
+            elif target_string.lower() == 'quit':
+                sys.exit()
+            elif checkUser(target_string) == False:
+                print('That username is not in our system')
+                target_string = input()
+                continue
+        return line_list
     
-    def twoLines(target_string2):
-        with path.open('r') as f:
-            lines = f.readlines()
-            for i, line in enumerate(lines):
-                if target_string2 in line:
-                    if i + 2 < len(lines):
-                        return lines[i + 2]
-                    else:
-                        return "Not in file"
-        return "Wrong"
-
-    def threeLines(target_string2):
-        with path.open('r') as f:
-            lines = f.readlines()
-            for i, line in enumerate(lines):
-                if target_string2 in line:
-                    if i + 2 < len(lines):
-                        return lines[i + 3]
-                    else:
-                        return "Not in file"
-        return "Wrong"
+    def checkList(compare, index):
+        if compare == line_list[index]:
+            return line_list[index]
+        else:
+            return "That is not in our system"
     
+    def addParam(param):
+        userList.append(param)
 
     #check if login.txt exists
     if not os.path.exists(path):
@@ -80,9 +80,9 @@ while True:
     skip = input()
     #If no, set up the users account
     if skip.lower() == 'no':
-        print('\nNow set up your account\n')
+        print('\nNow set up your account')
         #Set username
-        while not userDone:
+        while True:
             print("Set your username")
             user = input()
             #Check if username is taken already
@@ -91,13 +91,12 @@ while True:
                 continue
             else:
                 break
-        toFile(user)
+        addParam(user)
 
         #Set password
         print("Set your password")
-        decrPass = input()
-        encrPass = Encrypt(decrPass)
-        toFile(encrPass)
+        encrPass = Encrypt(input())
+        addParam(encrPass)
 
         #MFA Setup
         print('Pick your security question:')
@@ -106,66 +105,72 @@ while True:
         while True:
             if question == "1":
                 question = '0'
-                toFile(question)
+                addParam(question)
                 break
             elif question == "2":
                 question = '1'
-                toFile(question)
+                addParam(question)
                 break
             else:
                 print('Invalid input, try again')
                 question = input()
         print('Now type your answer to your question.')
         secAns = input()
-        toFile(secAns)
+        addParam(secAns)
 
-
+        toFile(userList)
         print("You've setup your account! Now login")
 
     #Else if they do have an account try to login
     elif skip.lower() == 'yes':
-            #Username login
-            print('Please enter your username. Type quit to stop logging in.')
-            userInpt = input()
-            #Quit if needed
-            if userInpt.lower() == 'quit':
-                break
-            #Make sure username is in the system
-            while not checkUser(userInpt):
-                print("That username is not in our system, try again")
-                userInpt = input()
-
-            #For loop to have 3 tries to input the correct password
-            for i in range(3):
-                if checkUser(userInpt) == True:
-                    print("Now enter the password for " + userInpt + ". Type quit to stop logging in.")
-                    passInpt = input()
-                    if passInpt.lower() == 'quit':
-                        break
-                    triedPass = Encrypt(passInpt)
-                    if nextLine(userInpt) == triedPass:
-                        i = 3
-                        break
-                    else:
-                        tries = 2 - i
-                        i + 1
-                        print('You have ' + str(tries) + ' tries remaining!')
-                        if tries == 0:
-                            sys.exit
             
-            #MFA
-            print('Now answer your MFA question.')
-            print(questionList[int(twoLines(userInpt))])
-            guessSecAns = input()
-            if guessSecAns.strip().lower() == threeLines(userInpt).strip().lower():
-                print('You got it right!')
-            else:
-                print('You got it wrong! Redo your authentication')
-                continue
+            #Username login
+            print("Please enter your username")
+            guess = input()
+            line_list = getList(guess)
+            inList = checkList(guess, 0)
+            while True:
+                if inList == guess:
+                    #Username is recognized
+                    break
+                else:
+                    print("Username not recognized, try again")
+                    guess = input()
+                    continue
+
+            #Password Check
+            print("Please enter your password")
+            guess = input()
+            secAns = Encrypt(guess)
+            inList = checkList(secAns, 1)
+            while True:
+                if inList == secAns:
+                    #Password is recognized
+                    break
+                else:
+                    if tries == 1:
+                        print("You have 0 tries remaining. You have failed to login")
+                        sys.exit()
+                    tries -= 1
+                    print("Password not recognized. " + str(tries) + " tries remaining.")
+                    guess = input()
+                    continue
+            #MFA Check
+            question = line_list[2]
+            prntQuest = questionList[int(question)]
+            print(prntQuest)
+            guess = input()
+            inList = checkList(guess, 3)
+            while True:
+                if inList == guess:
+                    #MFA answer is right
+                    break
+                else:
+                    print("MFA Failed")
+                    sys.exit()
             break
-    
     else:
         print('Invalid input')
         continue
-
+#Everything was successful
 print("You're in!")

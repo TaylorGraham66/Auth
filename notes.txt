@@ -1,4 +1,4 @@
-add array for login info. Might number each line for a key or just have the username (value[0]) be the 
-key that is used to read off the rest of the line.
+add array for login info. I am now in the middle of merging overhaul with old code. Just started with merging
+the login (username)
 
 check for nothing or unexpected value: not started
