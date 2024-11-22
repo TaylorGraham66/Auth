@@ -6,11 +6,9 @@ import sys
 
 #Initializing Variables
 encrPass = ''
-decrPass = ''
 userInpt = ''
 passInpt = ''
 triedPass = ''
-userDone = False
 path = Path("login.txt")
 questionList = ['Who is your favorite super hero?', 'What is your moms maiden name?']
 question = ''
@@ -69,6 +67,7 @@ while True:
                     else:
                         return "Not in file"
         return "Wrong"
+    
 
     #check if login.txt exists
     if not os.path.exists(path):
