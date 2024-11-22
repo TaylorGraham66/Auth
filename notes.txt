@@ -1,4 +1,1 @@
-add array for login info. I am now in the middle of merging overhaul with old code. Just started with merging
-the login (username)
-
 check for nothing or unexpected value: not started

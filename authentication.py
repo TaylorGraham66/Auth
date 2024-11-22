@@ -19,6 +19,7 @@ line_list = []
 guess = ''
 inList = ''
 tries = 3
+storedUser = ''
 
 
 #Authentication Loop
@@ -40,7 +41,8 @@ while True:
     def checkUser(inptUser):
         with path.open("r") as f:
             for line in f:
-                if inptUser in line:
+                storedUser = line.split(':')[0]
+                if storedUser.lower() == inptUser.lower():
                     return True
             return False
 
@@ -49,7 +51,8 @@ while True:
             if checkUser(target_string) == True:
                 with path.open('r') as f:
                     for line in f:
-                        if target_string in line:
+                        stored_user = line.split(":")[0]
+                        if stored_user.lower() == target_string.lower():
                             lineCheck = line.strip()
                             line_list = lineCheck.split(':')
                             break
@@ -57,7 +60,7 @@ while True:
             elif target_string.lower() == 'quit':
                 sys.exit()
             elif checkUser(target_string) == False:
-                print('That username is not in our system')
+                print("Username not recognized. Try again.")
                 target_string = input()
                 continue
         return line_list
@@ -70,6 +73,9 @@ while True:
     
     def addParam(param):
         userList.append(param)
+
+    def hasSpecChar(string):
+        return not all(c.isalpha() for c in string)
 
     #check if login.txt exists
     if not os.path.exists(path):
@@ -94,13 +100,20 @@ while True:
         addParam(user)
 
         #Set password
-        print("Set your password")
-        encrPass = Encrypt(input())
+        print("Set your password. Special characters are not allowed")
+        while True:
+            passInpt = input()
+            if not hasSpecChar(passInpt): 
+                encrPass = Encrypt(passInpt)
+                break
+            else:
+                print('Special Characters are not allowed. Try again')
+                continue
         addParam(encrPass)
 
         #MFA Setup
-        print('Pick your security question:')
-        print("1. " + questionList[0] + " 2. " + questionList[1])
+        print('\nPick one of these to be your security question:')
+        print("1. " + questionList[0] + "\n" + " 2. " + questionList[1])
         question = input()
         while True:
             if question == "1":
@@ -125,21 +138,15 @@ while True:
     elif skip.lower() == 'yes':
             
             #Username login
-            print("Please enter your username")
-            guess = input()
-            line_list = getList(guess)
-            inList = checkList(guess, 0)
+            print("Please enter your username. Enter 'quit' to stop logging in.")
             while True:
-                if inList == guess:
-                    #Username is recognized
-                    break
-                else:
-                    print("Username not recognized, try again")
-                    guess = input()
-                    continue
+                guess = input()
+                line_list = getList(guess)
+                inList = checkList(guess, 0)
+                break
 
             #Password Check
-            print("Please enter your password")
+            print("Please enter your password. Enter 'quit' to stop logging in.")
             guess = input()
             secAns = Encrypt(guess)
             inList = checkList(secAns, 1)
