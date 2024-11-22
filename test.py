@@ -7,9 +7,6 @@ def checkList(check):
     if checkUser(userInpt):
         userList = 
 
-    
-
-
 while True:
     print("Set your username")
     user = input()
