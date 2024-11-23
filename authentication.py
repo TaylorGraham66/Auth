@@ -6,14 +6,11 @@ import sys
 
 #Initializing Variables
 encrPass = ''
-userInpt = ''
 passInpt = ''
-triedPass = ''
 path = Path("login.txt")
 questionList = ['Who is your favorite super hero?', 'What is your moms maiden name?']
 question = ''
 secAns = ''
-guessSecAns = ''
 userList = []
 line_list = []
 guess = ''
@@ -37,6 +34,10 @@ while True:
             f.write(":".join(str(item) for item in var))
             f.write("\n")
 
+    #Adds the set value to the list
+    def addParam(param):
+        userList.append(param)
+
     #Check if user is correct
     def checkUser(inptUser):
         with path.open("r") as f:
@@ -45,7 +46,8 @@ while True:
                 if storedUser.lower() == inptUser.lower():
                     return True
             return False
-
+        
+    #Checks to see if the user has an account, and if so grabs the list from the database
     def getList(target_string):
         while True:
             if checkUser(target_string) == True:
@@ -65,15 +67,14 @@ while True:
                 continue
         return line_list
     
+    #Checks to see if the value is in the list, and if so returns that value
     def checkList(compare, index):
         if compare == line_list[index]:
             return line_list[index]
         else:
             return "That is not in our system"
-    
-    def addParam(param):
-        userList.append(param)
 
+    #Checks to see if a special character is in the string
     def hasSpecChar(string):
         return not all(c.isalpha() for c in string)
 
@@ -91,10 +92,15 @@ while True:
         while True:
             print("Set your username")
             user = input()
-            #Check if username is taken already
+            #Check if username is valid
             if checkUser(user) == True:
                 print('Username is taken, please choose another\n')
                 continue
+            elif user == ' ':
+                print('Please enter a valid username')
+                continue
+            elif user == '':
+                print('Please enter a valid username')
             else:
                 break
         addParam(user)
@@ -106,6 +112,11 @@ while True:
             if not hasSpecChar(passInpt): 
                 encrPass = Encrypt(passInpt)
                 break
+            elif passInpt == ' ':
+                print('Please enter a valid password')
+                continue
+            elif passInpt == '':
+                print('Please enter a valid password')
             else:
                 print('Special Characters are not allowed. Try again')
                 continue
@@ -113,7 +124,7 @@ while True:
 
         #MFA Setup
         print('\nPick one of these to be your security question:')
-        print("1. " + questionList[0] + "\n" + " 2. " + questionList[1])
+        print("1. " + questionList[0] + "\n" + "2. " + questionList[1])
         question = input()
         while True:
             if question == "1":
@@ -162,6 +173,7 @@ while True:
                     print("Password not recognized. " + str(tries) + " tries remaining.")
                     guess = input()
                     continue
+
             #MFA Check
             question = line_list[2]
             prntQuest = questionList[int(question)]
@@ -179,5 +191,6 @@ while True:
     else:
         print('Invalid input')
         continue
+
 #Everything was successful
 print("You're in!")
