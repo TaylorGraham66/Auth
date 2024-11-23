@@ -4,9 +4,6 @@ from pathlib import Path
 #importing backend logic
 from static.authentication import process_data
 
-
-path = Path("static/login.txt")
-
 app = Flask(__name__)
 CORS(app)
 
@@ -18,7 +15,7 @@ def home():
 #Read my file backend
 @app.route('/process-file', methods=['POST'])
 def process_file():
-    file_path = path
+    file_path = Path("static\login.txt")
     if file_path.exists():
         with open(file_path, 'r') as file:
             content = file.read()
