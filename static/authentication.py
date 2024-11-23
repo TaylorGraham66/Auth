@@ -6,7 +6,7 @@ import sys
 #Initializing Variables
 encrPass = ''
 passInpt = ''
-path = Path("static/login.txt")
+path = Path("login.txt")
 questionList = ['Who is your favorite super hero?', 'What is your moms maiden name?']
 question = ''
 secAns = ''
