@@ -1,4 +1,3 @@
-
 import hashlib
 from pathlib import Path
 import os
@@ -18,6 +17,9 @@ inList = ''
 tries = 3
 storedUser = ''
 
+
+def process_data(data):
+    return data['value'] * 2
 
 #Authentication Loop
 while True:
