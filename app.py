@@ -15,7 +15,7 @@ def home():
 #Read my file backend
 @app.route('/process-file', methods=['POST'])
 def process_file():
-    file_path = Path("static\login.txt")
+    file_path = Path("static/login.txt")
     if file_path.exists():
         with open(file_path, 'r') as file:
             content = file.read()
